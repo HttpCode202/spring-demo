@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.time.Duration;
+
 @SpringBootTest
 class FirstFluxServiceTest {
 
@@ -75,6 +77,40 @@ class FirstFluxServiceTest {
                     .expectErrorMatches(predicat -> predicat instanceof IllegalArgumentException
                             && "my error".equals(predicat.getMessage()))
                     .verify();
+        }
+
+    }
+
+    @Nested
+    class numberfluxWithSleepTest extends Utils {
+
+        @Test
+        void defaultCase() {
+            Flux<String> flux = firstFluxService.numberfluxWithSleep();
+
+            StepVerifier.create(flux)
+                    .expectNext("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
+                    .expectComplete()
+                    .verifyThenAssertThat()
+                    .tookMoreThan(Duration.ofMillis(50))
+                    .tookLessThan(Duration.ofMillis(150));
+        }
+
+    }
+
+    @Nested
+    class numberfluxWithZipTest extends Utils {
+
+        @Test
+        void defaultCase() {
+            Flux<String> flux = firstFluxService.numberfluxWithZip();
+
+            StepVerifier.create(flux)
+                    .expectNext("OneFive", "TwoSix", "ThreeSeven", "FourEight")
+                    .expectComplete()
+                    .verifyThenAssertThat()
+                    .hasDiscardedElements()
+                    .hasDiscarded("Nine", "Ten");
         }
 
     }
