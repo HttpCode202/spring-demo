@@ -1,6 +1,5 @@
 package fr.HttpCode202.demo.flux;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,107 +11,82 @@ import java.time.Duration;
 @SpringBootTest
 class FirstFluxServiceTest {
 
-    static class Utils {
-        @Autowired
-        protected FirstFluxService firstFluxService;
+    @Autowired
+    private FirstFluxService firstFluxService;
+
+    @Test
+    void flux() {
+        Flux<String> flux = firstFluxService.flux();
+
+        StepVerifier.Step<String> step = StepVerifier.create(flux)
+                .expectNext("One")
+                .expectNext("Two");
+
+        step.expectNextMatches("Three"::equals)
+                .expectNextMatches("Four"::equals);
+
+        step.expectNext("Five", "Six")
+                .expectNext("Seven", "Eight");
+
+        step.expectNextCount(1)
+                .expectNext("Ten")
+                .expectComplete()
+                .verify();
     }
 
-    @Nested
-    class numberfluxTest extends Utils {
+    @Test
+    void fluxWithFilter() {
+        Flux<String> flux = firstFluxService.fluxWithFilter();
 
-        @Test
-        void defaultCase() {
-            Flux<String> flux = firstFluxService.numberflux();
-
-            StepVerifier.Step<String> step = StepVerifier.create(flux)
-                    .expectNext("One")
-                    .expectNext("Two");
-
-            step.expectNextMatches("Three"::equals)
-                    .expectNextMatches("Four"::equals);
-
-            step.expectNext("Five", "Six")
-                    .expectNext("Seven", "Eight");
-
-            step.expectNextCount(1)
-                    .expectNext("Ten")
-                    .expectComplete()
-                    .verify();
-        }
-
-        @Test
-        void withFilter() {
-            Flux<String> flux = firstFluxService.numberflux()
-                    .filter(predicat -> predicat.length() > 3);
-
-            StepVerifier.create(flux)
-                    .expectNext("Three", "Four", "Five", "Seven", "Eight", "Nine")
-                    .expectComplete()
-                    .verify();
-        }
-
-        @Test
-        void withFilterAndMap() {
-            Flux<String> flux = firstFluxService.numberflux()
-                    .filter(predicat -> predicat.length() > 3 && !predicat.startsWith("F"))
-                    .map(String::toUpperCase);
-
-            StepVerifier.create(flux)
-                    .expectNext("THREE", "SEVEN", "EIGHT", "NINE")
-                    .expectComplete()
-                    .verify();
-        }
-
+        StepVerifier.create(flux)
+                .expectNext("Three", "Four", "Five", "Seven", "Eight", "Nine")
+                .expectComplete()
+                .verify();
     }
 
-    @Nested
-    class numberfluxWithErrorTest extends Utils {
+    @Test
+    void fluxWithFilterAndMap() {
+        Flux<String> flux = firstFluxService.fluxWithFilterAndMap();
 
-        @Test
-        void defaultCase() {
-            Flux<String> flux = firstFluxService.numberfluxWithError();
-
-            StepVerifier.create(flux)
-                    .expectNext("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
-                    .expectErrorMatches(predicat -> predicat instanceof IllegalArgumentException
-                            && "my error".equals(predicat.getMessage()))
-                    .verify();
-        }
-
+        StepVerifier.create(flux)
+                .expectNext("THREE", "SEVEN", "EIGHT", "NINE")
+                .expectComplete()
+                .verify();
     }
 
-    @Nested
-    class numberfluxWithSleepTest extends Utils {
+    @Test
+    void fluxWithError() {
+        Flux<String> flux = firstFluxService.fluxWithError();
 
-        @Test
-        void defaultCase() {
-            Flux<String> flux = firstFluxService.numberfluxWithSleep();
-
-            StepVerifier.create(flux)
-                    .expectNext("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
-                    .expectComplete()
-                    .verifyThenAssertThat()
-                    .tookMoreThan(Duration.ofMillis(50))
-                    .tookLessThan(Duration.ofMillis(150));
-        }
-
+        StepVerifier.create(flux)
+                .expectNext("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
+                .expectErrorMatches(predicat -> predicat instanceof IllegalArgumentException
+                        && "my error".equals(predicat.getMessage()))
+                .verify();
     }
 
-    @Nested
-    class numberfluxWithZipTest extends Utils {
+    @Test
+    void fluxWithSleep() {
+        Flux<String> flux = firstFluxService.fluxWithSleep();
 
-        @Test
-        void defaultCase() {
-            Flux<String> flux = firstFluxService.numberfluxWithZip();
+        StepVerifier.create(flux)
+                .expectNext("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
+                .expectComplete()
+                .verifyThenAssertThat()
+                .tookMoreThan(Duration.ofMillis(50))
+                .tookLessThan(Duration.ofMillis(150));
+    }
 
-            StepVerifier.create(flux)
-                    .expectNext("OneFive", "TwoSix", "ThreeSeven", "FourEight")
-                    .expectComplete()
-                    .verifyThenAssertThat()
-                    .hasDiscardedElements()
-                    .hasDiscarded("Nine", "Ten");
-        }
+    @Test
+    void fluxWithZip() {
+        Flux<String> flux = firstFluxService.fluxWithZip();
 
+        StepVerifier.create(flux)
+                .expectNext("OneFive", "TwoSix", "ThreeSeven", "FourEight")
+                .expectComplete()
+                .verifyThenAssertThat()
+                .hasDiscardedElements()
+                .hasDiscarded("Nine", "Ten");
     }
 
 }

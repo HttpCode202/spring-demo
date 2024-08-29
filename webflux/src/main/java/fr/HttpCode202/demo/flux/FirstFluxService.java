@@ -7,24 +7,34 @@ import reactor.core.publisher.Mono;
 @Service
 public class FirstFluxService {
 
-    private Flux<String> numberfluxOneToFive() {
+    private Flux<String> fluxOneToFive() {
         return Flux.just("One", "Two", "Three", "Four");
     }
 
-    private Flux<String> numberfluxSixToTen() {
+    private Flux<String> fluxSixToTen() {
         return Flux.just("Five", "Six", "Seven", "Eight", "Nine", "Ten");
     }
 
-    public Flux<String> numberflux() {
-        return numberfluxOneToFive().concatWith(numberfluxSixToTen());
+    public Flux<String> flux() {
+        return fluxOneToFive().concatWith(fluxSixToTen());
     }
 
-    public Flux<String> numberfluxWithError() {
-        return numberflux().concatWith(Mono.error(new IllegalArgumentException("my error")));
+    public Flux<String> fluxWithFilter() {
+        return flux().filter(predicat -> predicat.length() > 3);
     }
 
-    public Flux<String> numberfluxWithSleep() {
-        return numberfluxOneToFive().concatWith(
+    public Flux<String> fluxWithFilterAndMap() {
+        return flux().filter(predicat -> predicat.length() > 3 && !predicat.startsWith("F"))
+                .map(String::toUpperCase);
+    }
+
+
+    public Flux<String> fluxWithError() {
+        return flux().concatWith(Mono.error(new IllegalArgumentException("my error")));
+    }
+
+    public Flux<String> fluxWithSleep() {
+        return fluxOneToFive().concatWith(
                 Mono.create(callback -> {
                     try {
                         Thread.sleep(100);
@@ -32,12 +42,12 @@ public class FirstFluxService {
                         throw new RuntimeException(exception);
                     }
                     callback.success();
-                })).concatWith(numberfluxSixToTen());
+                })).concatWith(fluxSixToTen());
     }
 
-    public Flux<String> numberfluxWithZip() {
-        return numberfluxOneToFive().zipWith(
-                numberfluxSixToTen(),
+    public Flux<String> fluxWithZip() {
+        return fluxOneToFive().zipWith(
+                fluxSixToTen(),
                 (String flux1, String flux2) -> String.format("%s%s", flux1, flux2)
         );
     }
