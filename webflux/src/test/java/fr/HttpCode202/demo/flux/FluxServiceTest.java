@@ -9,14 +9,14 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 
 @SpringBootTest
-class FirstFluxServiceTest {
+class FluxServiceTest {
 
     @Autowired
-    private FirstFluxService firstFluxService;
+    private FluxService fluxService;
 
     @Test
     void flux() {
-        Flux<String> flux = firstFluxService.flux();
+        Flux<String> flux = fluxService.flux();
 
         StepVerifier.Step<String> step = StepVerifier.create(flux)
                 .expectNext("One")
@@ -36,7 +36,7 @@ class FirstFluxServiceTest {
 
     @Test
     void fluxWithFilter() {
-        Flux<String> flux = firstFluxService.fluxWithFilter();
+        Flux<String> flux = fluxService.fluxWithFilter();
 
         StepVerifier.create(flux)
                 .expectNext("Three", "Four", "Five", "Seven", "Eight", "Nine")
@@ -46,7 +46,7 @@ class FirstFluxServiceTest {
 
     @Test
     void fluxWithFilterAndMap() {
-        Flux<String> flux = firstFluxService.fluxWithFilterAndMap();
+        Flux<String> flux = fluxService.fluxWithFilterAndMap();
 
         StepVerifier.create(flux)
                 .expectNext("THREE", "SEVEN", "EIGHT", "NINE")
@@ -56,7 +56,7 @@ class FirstFluxServiceTest {
 
     @Test
     void fluxWithError() {
-        Flux<String> flux = firstFluxService.fluxWithError();
+        Flux<String> flux = fluxService.fluxWithError();
 
         StepVerifier.create(flux)
                 .expectNext("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
@@ -67,7 +67,7 @@ class FirstFluxServiceTest {
 
     @Test
     void fluxWithSleep() {
-        Flux<String> flux = firstFluxService.fluxWithSleep();
+        Flux<String> flux = fluxService.fluxWithSleep();
 
         StepVerifier.create(flux)
                 .expectNext("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten")
@@ -79,7 +79,7 @@ class FirstFluxServiceTest {
 
     @Test
     void fluxWithZip() {
-        Flux<String> flux = firstFluxService.fluxWithZip();
+        Flux<String> flux = fluxService.fluxWithZip();
 
         StepVerifier.create(flux)
                 .expectNext("OneFive", "TwoSix", "ThreeSeven", "FourEight")

@@ -5,7 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class FirstFluxService {
+public class FluxService {
 
     private Flux<String> fluxOneToFive() {
         return Flux.just("One", "Two", "Three", "Four");
