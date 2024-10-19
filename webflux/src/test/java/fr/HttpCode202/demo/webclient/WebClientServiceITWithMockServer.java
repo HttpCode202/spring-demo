@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockserver.client.server.MockServerClient;
+import org.mockserver.client.MockServerClient;
 import org.mockserver.configuration.ConfigurationProperties;
 import org.mockserver.matchers.Times;
 import org.mockserver.model.HttpRequest;
@@ -45,7 +45,7 @@ class WebClientServiceITWithMockServer {
 
     @Test
     void callServer(CapturedOutput capturedOutput) {
-        ConfigurationProperties.overrideLogLevel(Level.OFF.getName());
+        ConfigurationProperties.logLevel(Level.OFF.getName());
         mockServer.when(HttpRequest.request("/api/v1/response-server/number"), Times.once())
                 .respond(HttpResponse.response().withStatusCode(200)
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -66,7 +66,7 @@ class WebClientServiceITWithMockServer {
 
     @Test
     void callServerAsynchronousWithLatchAwait(CapturedOutput capturedOutput) {
-        ConfigurationProperties.overrideLogLevel(Level.OFF.getName());
+        ConfigurationProperties.logLevel(Level.OFF.getName());
         mockServer.when(HttpRequest.request("/api/v1/response-server/number"), Times.once())
                 .respond(HttpResponse.response().withStatusCode(200)
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -89,7 +89,7 @@ class WebClientServiceITWithMockServer {
 
     @Test
     void callServerAsynchronousWithoutLatchAwait(CapturedOutput capturedOutput) {
-        ConfigurationProperties.overrideLogLevel(Level.OFF.getName());
+        ConfigurationProperties.logLevel(Level.OFF.getName());
         mockServer.when(HttpRequest.request("/api/v1/response-server/number"), Times.once())
                 .respond(HttpResponse.response().withStatusCode(200)
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
