@@ -28,11 +28,10 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 @SpringBootTest
 @ExtendWith(OutputCaptureExtension.class)
 class WebClientServiceITWithMockServer {
+    private static MockServerClient mockServer;
+    private final CountDownLatch latch = new CountDownLatch(1);
     @Autowired
     private WebClientService webClientService;
-    private final CountDownLatch latch = new CountDownLatch(1);
-
-    private static MockServerClient mockServer;
 
     @BeforeAll
     public static void startServer() {

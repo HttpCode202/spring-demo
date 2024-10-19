@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 @ExtendWith(OutputCaptureExtension.class)
 public class WebClientServiceIT {
+    private final CountDownLatch latch = new CountDownLatch(1);
     @Autowired
     private WebClientService webClientService;
-    private final CountDownLatch latch = new CountDownLatch(1);
 
     @Test
     void callServer(CapturedOutput capturedOutput) {
