@@ -1,10 +1,10 @@
 package fr.HttpCode202.demo;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.reactive.config.EnableWebFlux;
 
-@EnableWebFlux
+@EnableAutoConfiguration
 @SpringBootApplication
 public class DemoApplication {
 
