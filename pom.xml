@@ -24,7 +24,7 @@
     </developers>
 
     <properties>
-        <java.version>22</java.version>
+        <java.version>23</java.version>
         <spring.boot.version>3.3.4</spring.boot.version>
         <reactor.test.version>3.6.11</reactor.test.version>
         <mock.server.version>5.15.0</mock.server.version>
